@@ -1,0 +1,129 @@
+/* Basic reset and font settings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Source Serif Pro", serif;
+  background-color: #fdfdfa;
+  color: #333;
+  line-height: 1.6;
+  margin: 20px;
+}
+
+header, main, footer {
+  max-width: 720px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: #007bff; /* Blue color for the title */
+  margin-bottom: 0.5rem;
+}
+
+header p {
+  font-size: 1.1rem;
+}
+
+main {
+  margin-top: 1rem;
+}
+
+article {
+  margin-bottom: 2rem;
+  padding: 0.5rem;
+}
+
+.post-title {
+  font-size: 1.75rem;
+  color: #007bff; /* Blue color for the title */
+  margin-bottom: 0.5rem;
+}
+
+.post-image {
+  width: 50%;
+  max-width: 200px; /* Smaller image size */
+  height: auto;
+  display: block;
+  margin-bottom: 1rem; /* Space between title and image */
+}
+
+.post-content {
+  margin-bottom: 1rem;
+}
+
+.post-meta {
+  font-size: 0.9rem;
+  color: #666; /* Gray color for the timestamp */
+}
+
+.post-author {
+  font-size: 0.9rem;
+  color: #888; /* Gray color for the author */
+}
+
+hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid #ddd; /* Light gray border for separation */
+}
+
+footer {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+/* Existing styles... */
+
+.post-title {
+  color: #add8e6; /* Baby blue color */
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.post-content h1 {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color:#007bff
+}
+
+.post-meta {
+  font-size: 0.9rem;
+  color: #555;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.post-author {
+  color: #888; /* Gray color for the author's name */
+}
+
+/* Additional styles for responsiveness */
+@media (max-width: 768px) {
+  .post-title {
+    font-size: 1.5rem;
+  }
+
+  .post-content {
+    font-size: 0.9rem;
+  }
+}
+.readmore{
+  color:#007bff;
+  text-decoration:none;
+}
