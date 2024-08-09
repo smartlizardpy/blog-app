@@ -16,7 +16,6 @@ function cut(text, postt) {
   }
 }
 
-
 // Create __dirname equivalent
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,7 +40,7 @@ const postsHtml = postsData.map(post => {
   return `
 <article>
     <img src="${image}" alt="${title}" class="post-image">
-    <div class="post-content">${marked(cut(content,post.))} </div>
+    <div class="post-content">${marked(cut(content,post.title))} </div>
     <div class="post-meta">
         <time>${timestamp}</time>
         <div class="post-author">by ${author}</div>
@@ -55,14 +54,15 @@ const postsHtml = postsData.map(post => {
 
 // Set up Pug as the templating engine
 app.set('view engine', 'pug');
-app.set('views', __dirname); // Main directory
+app.set('views', path.join(__dirname, 'views')); // Set views directory to "views" folder
 
 // Serve static files
 app.use(express.static(__dirname));
 
 // Define routes
 app.get('/', (req, res) => {
-  res.render('index', { posts: postsHtml });
+  console.log('Looking for views in:', path.join(__dirname, 'views')); // Debugging line
+  res.render('index.pug', { posts: postsHtml }); // Explicitly specify .pug extension
 });
 
 app.get('/post/:title', (req, res) => {
@@ -81,7 +81,7 @@ app.get('/post/:title', (req, res) => {
         </div>
       </article>
     `;
-    res.render('index', { posts: postHtml });
+    res.render('index.pug', { posts: postHtml }); // Explicitly specify .pug extension
   } else {
     res.status(404).send('<h1>Post Not Found</h1>');
   }
