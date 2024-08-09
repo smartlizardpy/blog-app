@@ -73,7 +73,7 @@ app.get('/post/:title', (req, res) => {
     const { image, content, timestamp, author } = post;
     const postHtml = `
       <article>
-        <img src="${image}" alt="${title}" class="post-image">
+        <img src="${image}" alt="${title}" class="post-image2">
         <div class="post-content">${marked(content)}</div>
         <div class="post-meta">
           <time>${timestamp}</time>
@@ -81,7 +81,7 @@ app.get('/post/:title', (req, res) => {
         </div>
       </article>
     `;
-    res.render('index.pug', { posts: postHtml }); // Explicitly specify .pug extension
+    res.render('post.pug', { posts: postHtml }); // Explicitly specify .pug extension
   } else {
     res.status(404).send('<h1>Post Not Found</h1>');
   }
