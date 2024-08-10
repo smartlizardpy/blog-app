@@ -3,19 +3,16 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    title Blog
+    title #{name}
     link(rel="stylesheet" href="/styles.css")
   body
     header
+      h1 #{name}
+      p #{desc}
       
-      h1 Ozan Kaygusuz
-      p Welcome to my dev blog!
       hr
     main
-      //- Posts area will be inserted here
       != posts
-
     footer
-     hr
-     p made with ❤️ by Ozan Kaygusuz
-
+   
+     p made with ❤️ by Ozi
