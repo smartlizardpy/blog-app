@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .post-list {
+            margin-top: 20px;
+        }
+        .post-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Admin Panel</h1>
+
+    <!-- Sign In Form -->
+    <form id="signInForm">
+        <h2>Sign In</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <button type="submit">Sign In</button>
+    </form>
+
+    <!-- Create Account Form -->
+    <form id="createAccountForm">
+        <h2>Create Account</h2>
+        <input type="text" id="newName" placeholder="Name" required>
+        <input type="text" id="newDesc" placeholder="Description" required>
+        <button type="submit">Create Account</button>
+    </form>
+
+    <!-- New Post Form -->
+    <form id="newPostForm" style="display:none;">
+        <h2>New Blog Post</h2>
+        <input type="text" id="postTitle" placeholder="Title" required>
+        <textarea id="postContent" placeholder="Content" rows="5" required></textarea>
+        <input type="text" id="postImage" placeholder="Image URL" required>
+        <div id="authorField" style="display:none;">
+            <input type="text" id="postAuthor" placeholder="Author" required>
+        </div>
+        <button type="submit">Submit Post</button>
+    </form>
+
+    <!-- Blog Posts List -->
+    <div id="postList" class="post-list" style="display:none;">
+        <h2>Existing Blog Posts</h2>
+        <div id="posts"></div>
+    </div>
+
+    <script>
+        const signInForm = document.getElementById('signInForm');
+        const createAccountForm = document.getElementById('createAccountForm');
+        const newPostForm = document.getElementById('newPostForm');
+        const authorField = document.getElementById('authorField');
+        const postList = document.getElementById('postList');
+        const postsDiv = document.getElementById('posts');
+
+        let currentUser = '';
+
+        // Check Local Storage for author
+        document.addEventListener('DOMContentLoaded', function() {
+            const author = localStorage.getItem('author');
+            if (!author) {
+                authorField.style.display = 'block';
+            }
+        });
+
+        // Sign In Form Submission
+        signInForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+
+            // Perform authentication (this could be a GET request to validate user)
+            const response = await fetch(`/api/get_blogs/${username}`);
+
+            if (response.ok) {
+                currentUser = username;
+                signInForm.style.display = 'none';
+                createAccountForm.style.display = 'none';
+                newPostForm.style.display = 'block';
+                postList.style.display = 'block';
+                loadPosts(username);  // Load existing posts
+            } else {
+                alert('Sign in failed');
+            }
+        });
+
+        // Create Account Form Submission
+        createAccountForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('newName').value;
+            const desc = document.getElementById('newDesc').value;
+
+            // Perform account creation (this could be a POST request to create a new user)
+            const response = await fetch(`/api/add_user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, file: `${name.toLowerCase()}.json`, desc })
+            });
+
+            if (response.ok) {
+                alert('Account created successfully');
+                createAccountForm.reset();
+            } else {
+                alert('Account creation failed');
+            }
+        });
+
+        // New Post Form Submission
+        newPostForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            const image = document.getElementById('postImage').value;
+            const author = localStorage.getItem('author') || document.getElementById('postAuthor').value;
+
+            // Save author to local storage
+            if (!localStorage.getItem('author')) {
+                localStorage.setItem('author', author);
+            }
+
+            const response = await fetch(`/api/add_blog/${currentUser}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title, content, image, timestamp: new Date().toISOString(), author })
+            });
+
+            if (response.ok) {
+                alert('Post submitted successfully');
+                loadPosts(currentUser);  // Reload posts after submission
+                newPostForm.reset();
+            } else {
+                alert('Post submission failed');
+            }
+        });
+
+        // Function to load existing posts
+        async function loadPosts(username) {
+            const response = await fetch(`/api/get_blogs/${username}`);
+            if (response.ok) {
+                const posts = await response.json();
+                postsDiv.innerHTML = '';
+                posts.forEach(post => {
+                    const postItem = document.createElement('div');
+                    postItem.classList.add('post-item');
+                    postItem.innerHTML = `<strong>${post.title}</strong>`;
+                    postsDiv.appendChild(postItem);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
